@@ -1,0 +1,73 @@
+Python library: re
+
+
+======================
+Pattern symbols:
+======================
+. any character except a newline
+* 0 or more repetitions (of a character/symbol)
++ 1 or more repetitions
+? 0 or 1 repetition
+{m} m repetitions
+{m,n} m-n repetitions
+^ matches the start of the string
+$ matches the end of the string or just before the newline at the end of the string
+[] set of characters (match a set of characters)
+[^] complementing the set (cannot match a set of characters)
+
+- range
+
+A|B either A or B
+(...) a group (capture and return matches)
+(?:...) non-capturing version
+
+..* == .+
+
+
+Under the hood, re uses a finite-state machine (FSM), or more formally, a nondeterministic finite automaton.
+Computer evaluates string from left to right, going through a series of finite states. Each state is a loop that checks a pattern in question. If computer finds itself in the final accept state after having read all of the user's input, then the string is valid. If computer is stuck in any state that is not the final accept state, the computer will conclude the string is invalid.
+
+
+Using raw string to escape certain characters:
+In Python, "\n" is interpreted as a single newline, where "\" is the beginning of an escape sequence.
+We don't want Python to misinterpret the "\" in regular expressions as such, so we have to specify "r" in front of a string to denote raw string. This tells Python to not interpret any "\" in the usual way. We want to literally pass the "\" and the trailing character into a regular expression function.
+
+**Good practice to just use "r" strings for all regular expressions.
+
+
+======================
+Built-in patterns:
+======================
+\d decimal digit
+\D not a decimal digit
+\s whitespace characters
+\S not a whitespace character
+\w a word character, includes an alphanumeric symbol or the underscore e.g. [a-zA-Z0-9_]
+\W not a word character
+
+
+======================
+Flags:
+======================
+re.IGNORECASE
+re.MULTILINE
+re.DOTALL (configure "." to accept any characters including a newline"
+
+
+======================
+Re functions:
+======================
+re.search(pattern, string, flags=0)
+
+re.match(pattern, string, flags=0)
+similar to re.search except it will match from beginning of string so you don't need to put the ^ symbol.
+
+re.fullmatch(patter, string, flags=0)
+same thing as re.match except it will also match the end of the string so you don't need to put the $ symbol.
+
+re.sub(pattern, repl, string, count=0, flags=0)
+substitute pattern with repl from a string and return the result
+
+re.split(pattern, string, maxsplit=0, flags=0)
+
+re.findall(pattern, string, flags=0)
