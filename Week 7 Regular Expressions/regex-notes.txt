@@ -23,6 +23,9 @@ A|B either A or B
 
 ..* == .+
 
+using ? on a quantifier (?, *, +) makes it non-greedy/lazy. 
+e.g. +? or *?
+
 
 Under the hood, re uses a finite-state machine (FSM), or more formally, a nondeterministic finite automaton.
 Computer evaluates string from left to right, going through a series of finite states. Each state is a loop that checks a pattern in question. If computer finds itself in the final accept state after having read all of the user's input, then the string is valid. If computer is stuck in any state that is not the final accept state, the computer will conclude the string is invalid.
