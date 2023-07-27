@@ -65,7 +65,7 @@ re.search(pattern, string, flags=0)
 re.match(pattern, string, flags=0)
 similar to re.search except it will match from beginning of string so you don't need to put the ^ symbol.
 
-re.fullmatch(patter, string, flags=0)
+re.fullmatch(pattern, string, flags=0)
 same thing as re.match except it will also match the end of the string so you don't need to put the $ symbol.
 
 re.sub(pattern, repl, string, count=0, flags=0)
