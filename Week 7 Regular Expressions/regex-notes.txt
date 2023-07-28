@@ -47,6 +47,7 @@ Built-in patterns:
 \S not a whitespace character
 \w a word character, includes an alphanumeric symbol or the underscore e.g. [a-zA-Z0-9_]
 \W not a word character
+\b boundary between /w and \W, or \w and beginning/end of string.
 
 
 ======================
