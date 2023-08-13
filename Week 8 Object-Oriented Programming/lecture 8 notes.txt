@@ -1,0 +1,147 @@
+Lecture 8 - OOP
+
+__init__
+
+__str__ <-- can print object as a string
+
+
+===============================
+
+property = an attribute that we have more control over, aka fancier attribute
+@property <-- built-in getter decorator
+
+Using a getter and setter enables Python to automatically detect when you try to manually set a value. 
+
+Example:
+
+** Whenever the programmer creates a getter and setter, the instance varialbe self.house cannot be accessed directly. It will first call the setter function automatically. Python will look on the left hand side, and if it sees that the word "house" in self.house is the name of the getter or setter and it sees an equal sign, it's enough of a visual clue for Python to not allow the self.house attribute to be accessed directly. It will use the setter if user tries to use "=" to assign value to self.house attribute. 
+
+** You name the the property function exactly like the name of the attribute, in this case "house". Once you do that, you can use a new setter decorator that gets automatically created for you, in this case "@house.setter"
+
+** By convention, do not have the setter store a value in an instance variable with same name as the one in the __init__ method. Use underscore as an indicator that it's a different instance variable. (Don't want to have same names colliding). Same with getter. return self._house instead of self.house.
+
+** The dot "." and the assignment operator "=" in self.house = 'some string' is enough of a clue for Python to see if the class has a setter defined and if so, it will call that setter function instead of just blindly assigning value from right to left. Using getter and setter give more control during value assignment.
+
+** Always one argument, self, for the getter. Always two arguments, self and the value that you want to set, for the setter.
+
+# Getter
+@property
+def house(self):
+    return self._house
+
+# Setter
+@house.setter
+def house(self, house):
+    if house not in ["Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"]:
+        raise ValueError("Invalid House")
+    self._house = house
+
+
+=================================
+
+@classmethod <-- built-in class method decorator
+- instance method and instance variable (attribute) are connected to the specific object via "self".
+- class method utilizes class as a container for methods and variables not connected to any specific instance/object.
+- pass in argument "cls" (short for class) into a class method. (Basically replace "self" with "cls" to prevent any confusion)
+- cls.houses is now a class variable (as opposed to instance variable or attribute)
+- No need to instantiate Hat class into an object. Can just use "Hat.sort('Harry')" directly.
+
+Example 1:
+
+class Hat:
+    houses = ["Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"]
+
+    @classmethod
+    def sort(cls, name):
+        print(name, "is in", random.choice(cls.houses))
+
+Hat.sort("Harry")
+
+
+Example 2:
+
+class Student:
+    def __init__(self, name, house):
+        self.name = name
+        self.house = house
+
+    def __str__(self):
+        return f"{self.name} from {self.house}"
+
+    @classmethod
+    def get(cls):
+        name = input("Name: ")
+        house = input("House: ")
+        return cls(name, house)
+
+def main():
+    student = Student.get()
+    print(student)
+
+  
+- in example 2, "cls" is analagous to "self", and it represents the object itself. Can instantiate object of current class via cls(). Can technically use Student() instead cls(), but it's conventional to just use cls().
+
+
+====================
+
+@staticmethod <--- another built-in decorator which we won't cover in this course
+
+====================
+
+Inheritance
+
+Calling super() will give you reference to the super/parent class.
+Explicitly call super's __init__() method to initialize Wizard class.
+
+Example:
+
+class Wizard:
+    def __init__(self, name):
+        if not name:
+            raise ValueError("Missing name:")
+
+class Student(Wizard):
+    def __init__(self, name, house):
+        super().__init__(name)
+        self.house = house
+
+class Professor(Wizard):
+    def __init___(self, name, subject):
+        super().__init__(name)
+        self.subject = subject
+
+
+====================
+
+Operator Overloading
+
+object.__add__(self, other)
+
+self is object on the left side of the "+" sign, other is whatever that is on the right side.
+in other words, self is the left operand, other is the right operand
+
+Example:
+
+class Vault:
+    def __init__(self, galleons=0, sickles=0, knuts=0):
+        self.galleons = galleons
+        self.sickles = sickles
+        self.knuts = knuts
+
+    def __str__(self):
+        return f"{self.galleons} Galleons, {self.sickles} Sickles, {self.knuts} Knuts"
+
+    def __add__(self, other):
+        galleons = self.galleons + other.galleons
+        sickles = self.sickles + other.sickles
+        knuts = self.knuts + other.knuts
+        return Vault(galleons, sickles, knuts)
+
+potter = Vault(100, 50, 25)
+print(potter)
+
+weasley = Vault(25, 50, 100)
+print(weasley)
+
+total = potter + weasley
+print(total)
