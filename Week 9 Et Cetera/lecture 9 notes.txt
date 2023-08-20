@@ -1,0 +1,320 @@
+Lecture 9 - Et Cetera
+
+=====================
+
+Data Type: set
+- useful if you want to filter out duplicates
+
+Example:
+
+students = [
+    {"name": "Hermione": "house": "Gryffindor"},
+    {"name": "Harry": "house": "Gryffindor"},
+    {"name": "Ron": "house": "Gryffindor"},
+    {"name": "Draco": "house": "Slytherin"},
+    {"name": "Padma": "house": "Ravenclaw"},
+]
+
+houses = set()
+for student in students:
+    houses.add(student["house"])
+
+for house in sorted(houses):
+    print(house)
+
+===================
+
+key word: global
+
+- okay to read a global variable inside a function, but cannot write to a global variable.
+- if you declare a variable inside a function, then the variable is local to that function. Other functions that are defined outside do not have access to the variable.
+
+Example:
+
+balance = 0
+
+def main():
+    print("Balance:", balance)
+    deposit(100)
+    withdraw(50)
+    print("Balance:", balance)
+
+def deposit(n):
+    global balance
+    balance += n
+
+def withdraw(n):
+    global balance
+    balance -= n
+
+if __name__ == "__main__":
+    main()
+
+=================
+
+constants
+
+Example 1:
+
+MEOWS = 3
+
+for _ in range(MEOWS):
+    print("meow")
+
+
+Example 2: constant class variables
+
+class Cat:
+    MEOWS = 3
+
+    def meow(self):
+        for _ in range(Cat.MEOWS):
+            print("meow")
+
+
+cat = Cat()
+cat.meow()
+
+===================
+
+type hints
+
+def meow(n: int) -> None:
+    for _ in range(n):
+        print("meow")
+
+number = input("Number: ")
+meow(number)
+
+
+run "mypy" to check type hint errors:
+$ mypy meows.py
+
+- can also give type hints to variables, not just parameters
+number: int = int(input("Number: "))
+
+=============================
+
+docstrings
+
+def meow(n: int) -> str:
+    """Meow n times."""
+    return "meow\n" * n
+
+- convention to document via below syntax so third-party tool can analyze docstring and generate documentation automatically.
+
+def meow(n: int) -> str:
+    """"
+    Meow n times.
+
+    :param n: Number of times to meow
+    :type n: int
+    :raise TypeError: If n is not an int
+    :return: A string of n meows, one per line
+
+==================================
+
+library: argparse
+
+- allow user to pass configuration options at the command line, like -n, -a, -b, -c, etc.
+- typing "-h" or "--help" will most of the time show usage of a cli program
+
+Example:
+
+import argparse
+
+parser = argparse.ArgumentParser(description="Meow like a cat")
+parser.add_argument("-n", default=1, help="number of times to meow", type=int)
+args = parser.parse_args()
+
+for _ in range(args.n):
+    print("meow")
+
+    :rtype: str
+    """"
+    return "meow\n" * n
+
+===============================
+
+unpacking list and tuples
+
+- unpack a single return value from a function and put it immediately into 2 or more variables.
+
+Example 1: unpacking variables
+
+first, last = input("What's your name? ").split(" ")
+
+- unpack a list using * at beginning of your variable. It will take one sequence and unpack it into individual arguments in same order.
+
+Example 2: unpacking arguments
+
+def total(galleons, sickles, knuts):
+    return (galleons * 17 + sickles) * 29 + knuts
+
+coins = [100, 50, 25]
+
+print(total(*coins), "Knuts")
+
+=================================
+
+unpacking dictionary
+
+- use ** in front of a dictionary variable to unpack.
+- allows for passing in a dictionary as an argument which will unpack as keyword arguments to the function.
+- in other words, both keys and values of the dictionary will be passed into a function as keyword arguments separated by a comma.
+
+Example:
+
+def total(galleons, sickles, knuts):
+    return (galleons * 17 + sickles) * 29 + knuts
+
+coins = {"galleons": 100, "sickles": 50, "knuts": 25}
+
+print(total(**coins), "Knuts")
+
+==================================
+
+*args, **kwargs
+
+- can give visual clue to Python that a function can take variable number of positional or keyword arguments
+
+- args returns a tuple of positional arguments
+- kwargs returns a dictionary of kekyword arguments
+
+Example:
+
+def f(*args, **kwargs):
+    print("Positional:", args)
+
+f(100, 50, 25)
+
+
+def f(*args, **kwargs):
+    print("Named:", kwargs)
+
+f(galleons=100, sickles=50, knuts=25)
+
+==================================
+
+map(function, iterable, ...)
+
+- procedural programming (write code top to bottom, left to right, with some functions aka procedures along the way. tend to have side effects like printing.)
+- object oriented programming (encapsulate data and functionality to classes)
+- functional programming (functions tend not to have side effects. they are self contained and take inputs and return values. example is passing a list to a sort function and then returning a sorted list.)
+
+- can use the map function to apply a certain function to each value in an iterable.
+
+Example:
+
+def main():
+    yell("This", "is", "CS50")
+
+def yell(*words):
+    uppercased = map(str.upper, words)
+    print(*uppercased)
+
+if __name__ == "__main__":
+    main()
+
+==================================
+
+list comprehension
+
+Example:
+
+students = [
+    {"name": "Hermione", "house": "Gryffindor"},
+    {"name": "Harry", "house": "Gryffindor"},
+    {"name": "Ron", "house": "Gryffindor"},
+    {"name": "Draco", "house": "Slytherin"},
+]
+
+gryffindors = [
+    student["name"] for student in students if student["house"] == "Gryffindor"
+]
+
+for gryffindor in sorted(gryffindors):
+    print(gryffindor)
+    
+================================
+
+filter(function, iterable)
+
+Example:
+
+students = [ ... ]
+
+def is_gryffindor(s):
+    return s["house"] == "Gryffindor"
+
+gryffindors = filter(is_gryffindor, students)
+
+for gryffindor in sorted(gryffindors, key=lambda s: s["name"]:
+    print(gryffindor["name"])
+
+================================
+
+dictionary comprehension
+
+students = ["Hermione", "Harry", "Ron"]
+
+gryffindors = {student: "Gryffindor" for student in students}
+
+print(gryffindors)
+
+=================================
+
+enumerate(iterable, start=0)
+
+- iterate over some sequence and find out both the value and index there of.
+- return 2 values, the current index and the current value.
+
+instead of writing like this:
+
+students = ["Hermione", "Harry", "Ron"]
+
+for i in range(len(students)):
+    print(i + 1, students[i])
+
+can write like this instead:
+
+for i, student in enumerate(students):
+print(i + 1, student)
+
+=================================
+
+generators
+
+- can define a function as a generator where it can still generate a massive amount of data for your users, but you can have it return a little bit at a time. We don't have to worry about it returning too much all at once and crash the program.
+
+Example: this program will crash. too much data being returned all at once.
+
+def main():
+    n = int(input("What's n? "))
+    for s in sheep(n):
+        print(s)
+
+
+def sheep(n):
+    flock = []
+    for i in range(n):
+        flock.append("🐑" * i)
+    return flock
+
+if __name__ == "__main__":
+    main()
+
+- to utilize generators, use yield.
+
+keyword: yield 
+
+- using yield in a loop will allow you to return a small piece of data at a time without terminating the function.
+- yield is returning an iterator that allows your own for loop in main to iterate over these generated values one at a time.
+- does not hog memory
+
+Example:
+
+def sheep(n):
+    for i in range(n):
+        yield "🐑" * i
+
